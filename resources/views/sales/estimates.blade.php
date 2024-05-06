@@ -1,4 +1,3 @@
-
 @extends('layouts.master')
 @section('content')
     {{-- message --}}
@@ -14,10 +13,6 @@
                 <div class="row align-items-center">
                     <div class="col">
                         <h3 class="page-title">Demandes d'achat</h3>
-                        <ul class="breadcrumb">
-                           <!-- <li class="breadcrumb-item"><a href="{{ route('home') }}">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Estimates</li>-->
-                        </ul>
                     </div>
                     <div class="col-auto float-right ml-auto">
                         <a href="{{ route('create/estimate/page') }}" class="btn add-btn"><i class="fa fa-plus"></i> Nouvelle demande</a>
@@ -68,24 +63,22 @@
                             <thead>
                                 <tr>
                                     <th>Numero de demande</th>
-                                    <th>Client</th>
+                                    <th>Type de demande</th>  <!-- Updated Column Header -->
                                     <th>Date de création</th>
                                     <th>Date du besoin</th>
-                                   <!-- <th>Total</th>-->
                                     <th>Status</th>
                                     <th class="text-right">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach ($estimates as $item )
+                                @foreach ($estimates as $item)
                                 <tr>
                                     <td hidden class="ids">{{ $item->id }}</td>
                                     <td hidden class="estimate_number">{{ $item->estimate_number }}</td>
                                     <td><a href="{{ url('estimate/view/'.$item->estimate_number) }}">{{ $item->estimate_number }}</a></td>
-                                    <td>{{ $item->client }}</td>
-                                    <td>{{date('d F, Y',strtotime($item->estimate_date)) }}</td>
-                                    <td>{{date('d F, Y',strtotime($item->expiry_date)) }}</td>
-                                    <td>${{ $item->total }}</td>
+                                    <td>{{ $item->type_demande }}</td>  <!-- Display Type de Demande -->
+                                    <td>{{date('d F, Y', strtotime($item->estimate_date)) }}</td>
+                                    <td>{{date('d F, Y', strtotime($item->expiry_date)) }}</td>
                                     <td><span class="badge bg-inverse-success">Acceptée</span></td>
                                     <td class="text-right">
                                         <div class="dropdown dropdown-action">

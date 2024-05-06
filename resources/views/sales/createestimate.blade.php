@@ -10,13 +10,13 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <h3 class="page-title">Nouvelle demande d'achat</h3>
-                        <!--
+                        
                         <ul class="breadcrumb">
                             <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
                             <li class="breadcrumb-item active">Create Estimate</li>
                            
                         </ul>
-                         -->
+                        
                     </div>
                 </div>
             </div>
@@ -28,57 +28,17 @@
                     <form action="{{ route('create/estimate/save') }}" method="POST">
                         @csrf
                         <div class="row">
-                            <div class="col-sm-6 col-md-3">
+                        <div class="col-sm-6 col-md-3">
                                 <div class="form-group">
-                                    <label>Client <span class="text-danger">*</span></label>
-                                    <input class="form-control" type="text" id="client" name="client">
-                                </div>
-                            </div>
-                            <!--
-                            <div class="col-sm-6 col-md-3">
-                                <div class="form-group">
-                                    <label>Project <span class="text-danger">*</span></label>
-                                    <select class="select" id="project" name="project">
-                                        <option>Select Project</option>
-                                        <option value="Office Management">Office Management</option>
-                                        <option value="Project Management">Project Management</option>
+                                <label>Type de demande <span class="text-danger">*</span></label>
+                                    <select class="form-control" id="type_demande" name="type_demande" onchange="toggleAdditionalOptions(this.value)">
+                                        <option value="">Select Type</option>
+                                        <option value="fourniture">Fourniture</option>
+                                        <option value="achat">Achat</option>
                                     </select>
                                 </div>
                             </div>
-                            -->
-                            <div class="col-sm-6 col-md-3">
-                                <div class="form-group">
-                                    <label>Email</label>
-                                    <input class="form-control" type="email" id="email" name="email">
-                                </div>
-                            </div>
-                            <!--
-                            <div class="col-sm-6 col-md-3">
-                                <div class="form-group">
-                                    <label>Tax</label>
-                                    <select class="select" id="tax" name="tax">
-                                        <option>--Select Tax--</option>
-                                        <option value="VAT">VAT</option>
-                                        <option value="GST">GST</option>
-                                        <option value="No Tax">No Tax</option>
-                                    </select>
-                                </div>
-                            </div>
-                            -->
-                            <!--
-                            <div class="col-sm-6 col-md-3">
-                                <div class="form-group">
-                                    <label>Client Address</label>
-                                    <textarea class="form-control" id="client_address" name="client_address" rows="2"></textarea>
-                                </div>
-                            </div>
-                            <div class="col-sm-6 col-md-3">
-                                <div class="form-group">
-                                    <label>Billing Address</label>
-                                    <textarea class="form-control" id="billing_address" name="billing_address" rows="2"></textarea>
-                                </div>
-                            </div>
-                            -->
+                            
                             <script>
                           document.addEventListener("DOMContentLoaded", function() {
                              var currentDate = new Date().toISOString().slice(0, 10);
@@ -121,10 +81,7 @@
                                                 <th style="width: 20px">#</th>
                                                 <th class="col-sm-2">Article</th> <!-- Hia item f db estimate_adds-->
                                                 <th class="col-md-6">Description</th> <!-- Hia description f db estimate_adds-->
-                                                <!--<th style="width:100px;">Prix unitaire</th>  Hia unit_cost f db estimate_adds
-                                                -->
                                                 <th style="width:80px;">Quantité</th>  <!-- Hia qty f db estimate_adds-->
-                                                <!--<th>Total</th>-->
                                                 <th> </th>
                                             </tr>
                                         </thead>
@@ -136,56 +93,143 @@
                                             <td>1</td>
                                             <td><input class="form-control" style="min-width:200px" type="text" id="item" name="item[]"></td>
                                             <td><input class="form-control"style="min-width:300px" type="text" id="description" name="description[]"></td>
-                                            <!--<td><input class="form-control unit_price" style="width:100px" type="text" id="unit_cost" name="unit_cost[]"></td> -->
                                             <td><input class="form-control qty" style="width:80px" type="text" id="qty" name="qty[]"></td>
-                                           <!-- <td><input class="form-control total" style="width:120px" type="text" id="amount" name="amount[]" value="0" readonly></td>-->
                                         
                                             <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Remove"><i class="fa fa-trash-o"></i></a></td>
                                         </tr>
                                         </tbody>
                                     </table>
                                 </div>
-                               <!-- <div class="table-responsive">
-                                    <table class="table table-hover table-white">
-                                        <tbody>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td class="text-right">Total</td>
-                                                <td>
-                                                    <input class="form-control text-right total" type="text" id="sum_total" name="total" value="0" readonly>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="5" class="text-right">Tax</td>
-                                                <td>
-                                                    <input class="form-control text-right"type="text" id="tax_1" name="tax_1" value="0" readonly>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="5" class="text-right">
-                                                    Discount %
-                                                </td>
-                                                <td>
-                                                    <input class="form-control text-right discount" type="text" id="discount" name="discount" value="10">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="5" style="text-align: right; font-weight: bold">
-                                                    Grand Total
-                                                </td>
-                                                <td style="font-size: 16px;width: 230px">
-                                                    <input class="form-control text-right" type="text" id="grand_total" name="grand_total" value="$ 0.00" readonly>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>                               
-                                </div>
-                                -->
+                               
                                 
                             </div>
+                        </div>
+                        <div class="row" id="additionalOptions" style="display:none;">
+                            
+                            <!-- Option cards -->
+                                <div class="option-cards-stack">
+                        <div class="option-card">
+                            <div>
+                            <div class="checkbox-group">
+                                <div class="checkbox-group-title-div">
+                                <label class="checkbox-group-title"
+                                    >Pièces à demander lors de la consultation:</label
+                                ><br />
+                                </div>
+                                <input
+                                type="checkbox"
+                                id="Echantillons"
+                                name="piece_joint[]"
+                                value="Echantillons"
+                                />
+                                <label for="Echantillons">Echantillons</label><br />
+                                <input
+                                type="checkbox"
+                                id="Catalogues"
+                                name="piece_joint[]"
+                                value="Catalogues"
+                                />
+                                <label for="Catalogues">Catalogues</label><br />
+                                <input
+                                type="checkbox"
+                                id="Facture proforma"
+                                name="piece_joint[]"
+                                value="Facture proforma"
+                                />
+                                <label for="Facture proforma">Facture proforma</label><br />
+                            </div>
+                            </div>
+                        </div>
+
+                        <div class="option-card">
+                            <div>
+                            <div class="checkbox-group">
+                                <div class="checkbox-group-title-div">
+                                <label class="checkbox-group-title"
+                                    >Elements exigés lors de la réception :</label
+                                ><br />
+                                </div>
+                                <input
+                                type="checkbox"
+                                id="piece1"
+                                name="element_exiges_lors_de_la_reception[]"
+                                value="Certificats"
+                                />
+                                <label for="piece1">Certificats</label><br />
+                                <input
+                                type="checkbox"
+                                id="piece2"
+                                name="element_exiges_lors_de_la_reception[]"
+                                value="Formation"
+                                />
+                                <label for="piece2">Formation</label><br />
+                                <input
+                                type="checkbox"
+                                id="piece3"
+                                name="element_exiges_lors_de_la_reception[]"
+                                value="Manuels d'utilisation"
+                                />
+                                <label for="piece3">Manuels d'utilisation</label><br />
+                            </div>
+                            </div>
+                        </div>
+
+                        <div class="option-card">
+                            <div>
+                            <div class="checkbox-group">
+                                <div class="checkbox-group-title-div">
+                                <label class="checkbox-group-title"
+                                    >Participation à la consultation / selection :</label
+                                ><br />
+                                </div>
+                                <input type="radio" id="Oui" name="participation_a_la_consultation_selection" value="Oui">
+                        <label for="Oui">Oui</label><br>
+                        <input type="radio" id="Non" name="participation_a_la_consultation_selection" value="Non">
+                        <label for="Non">Non</label><br>
+                        </div>
+                            </div>
+                        </div>
+
+                        <div class="option-card">
+                            <div>
+                            <div class="checkbox-group">
+                                <div class="checkbox-group-title-div">
+                                <label class="checkbox-group-title"
+                                    >L'achat demandé est-il</label
+                                ><br />
+                                </div>
+                                <input
+                                type="checkbox"
+                                id="piece1"
+                                name="achat_demande[]"
+                                value="Budgétisé"
+                                />
+                                <label for="piece1">Budgétisé</label><br />
+                                <input
+                                type="checkbox"
+                                id="piece2"
+                                name="achat_demande[]"
+                                value="Non Budgétisé"
+                                />
+                                <label for="piece2">Non Budgétisé</label><br />
+                                <input
+                                type="checkbox"
+                                id="piece3"
+                                name="achat_demande[]"
+                                value="Sponsorisé"
+                                />
+                                <label for="piece3">Sponsorisé</label><br />
+                                <input
+                                type="checkbox"
+                                id="piece4"
+                                name="achat_demande[]"
+                                value="Non Sponsorisé"
+                                />
+                                <label for="piece4">Non Sponsorisé</label><br />
+                            </div>
+                            </div>
+                        </div>
+                        </div>
                         </div>
                         <div class="submit-section">
                             <button class="btn btn-primary submit-btn m-r-10">Enregistrer et envoyer</button>
@@ -285,6 +329,12 @@
             }
             */
 
+        </script>
+        <script>
+             function toggleAdditionalOptions(value) {
+                const additionalOptions = document.getElementById('additionalOptions');
+                additionalOptions.style.display = (value === 'achat') ? 'block' : 'none';
+            }
         </script>
     @endsection
 @endsection

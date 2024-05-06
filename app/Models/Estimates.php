@@ -9,19 +9,14 @@ class Estimates extends Model
 {
     use HasFactory;
 
+    protected $table = 'estimates';
+
+    // Declare the fields that are mass assignable
     protected $fillable = [
-        'client',
-        'project',
-        'email',
-        'tax',
-        'client_address',
-        'billing_address',
+        'estimate_number',
+        'type_demande',
         'estimate_date',
         'expiry_date',
-        'total',
-        'tax_1',
-        'discount',
-        'grand_total',
-        'other_information',
+        'other_information'
     ];
 }
