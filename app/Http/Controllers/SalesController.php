@@ -68,7 +68,7 @@ class SalesController extends Controller
         $estimates->type_demande = $request->type_demande;
         $estimates->estimate_date = $request->estimate_date;
         $estimates->expiry_date = $request->expiry_date;
-        $estimates->other_information = $request->other_information;
+        
         $estimates->save();
 
         $estimate_number = DB::table('estimates')->orderBy('estimate_number', 'DESC')->select('estimate_number')->first();
@@ -80,6 +80,8 @@ class SalesController extends Controller
                 'estimate_number' => $estimate_number,
                 'description' => $request->description[$key],
                 'qty' => $request->qty[$key],
+                'motif'=> $request->motif[$key],
+
             ];
 
             EstimatesAdd::create($estimatesAdd);
@@ -140,6 +142,63 @@ class SalesController extends Controller
         return redirect()->back();
     }
 }
+
+public function showEstimates(Request $request)
+{
+    $sortField = $request->get('sort', 'estimate_number'); // Default sort by estimate number
+    $sortDirection = $request->get('direction', 'asc'); // Default sort direction
+
+    $estimates = Estimates::orderBy($sortField, $sortDirection)->paginate(10);
+
+    // Toggle sort direction for next click
+    $sortDirection = $sortDirection === 'asc' ? 'desc' : 'asc';
+
+    return view('estimates.index', compact('estimates', 'sortDirection'));
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     /** update record estimate */

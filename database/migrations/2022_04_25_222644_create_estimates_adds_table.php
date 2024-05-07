@@ -18,9 +18,8 @@ return new class extends Migration
             $table->string('estimate_number');
             $table->string('item')->nullable();
             $table->string('description')->nullable();
-            $table->string('unit_cost')->nullable();
             $table->string('qty')->nullable();
-            $table->string('amount')->nullable();
+            $table->string('motif')->nullable();
             $table->timestamps();
         });
     }

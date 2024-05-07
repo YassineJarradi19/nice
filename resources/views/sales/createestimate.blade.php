@@ -10,13 +10,7 @@
                 <div class="row">
                     <div class="col-sm-12">
                         <h3 class="page-title">Nouvelle demande d'achat</h3>
-                        
-                        <ul class="breadcrumb">
-                            <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
-                            <li class="breadcrumb-item active">Create Estimate</li>
-                           
-                        </ul>
-                        
+                       
                     </div>
                 </div>
             </div>
@@ -28,8 +22,9 @@
                     <form action="{{ route('create/estimate/save') }}" method="POST">
                         @csrf
                         <div class="row">
-                        <div class="col-sm-6 col-md-3">
-                                <div class="form-group">
+                            
+                            <div class="col-sm-6 col-md-3">
+                            <div class="form-group">
                                 <label>Type de demande <span class="text-danger">*</span></label>
                                     <select class="form-control" id="type_demande" name="type_demande" onchange="toggleAdditionalOptions(this.value)">
                                         <option value="">Select Type</option>
@@ -38,7 +33,7 @@
                                     </select>
                                 </div>
                             </div>
-                            
+
                             <script>
                           document.addEventListener("DOMContentLoaded", function() {
                              var currentDate = new Date().toISOString().slice(0, 10);
@@ -63,25 +58,21 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="row">
-                                    <div class="col-md-12">
-                                        <div class="form-group">
-                                            <label>Motif de demande</label> <!-- hia other_information f DB estimates-->
-                                            <textarea class="form-control" rows="3" id="other_information" name="other_information"></textarea>
-                                        </div>
-                                    </div>
-                                </div>
+                       
 
                         <div class="row">
                             <div class="col-md-12 col-sm-12">
                                 <div class="table-responsive">
-                                    <table class="table table-white" id="tableEstimate">
+                                    <table class="table table-hover table-white" id="tableEstimate">
                                         <thead>
                                             <tr>
                                                 <th style="width: 20px">#</th>
                                                 <th class="col-sm-2">Article</th> <!-- Hia item f db estimate_adds-->
                                                 <th class="col-md-6">Description</th> <!-- Hia description f db estimate_adds-->
+                                                <!--<th style="width:100px;">Prix unitaire</th>  Hia unit_cost f db estimate_adds
+                                                -->
                                                 <th style="width:80px;">Quantité</th>  <!-- Hia qty f db estimate_adds-->
+                                                <th>MOTIF DE DEMANDE</th>
                                                 <th> </th>
                                             </tr>
                                         </thead>
@@ -92,22 +83,19 @@
                                 
                                             <td>1</td>
                                             <td><input class="form-control" style="min-width:200px" type="text" id="item" name="item[]"></td>
-                                            <td><input class="form-control"style="min-width:300px" type="text" id="description" name="description[]"></td>
-                                            <td><input class="form-control qty" style="width:80px" type="text" id="qty" name="qty[]"></td>
-                                        
+        <td><textarea class="form-control" style="min-width:300px" id="description" name="description[]"></textarea></td>
+        <td><input class="form-control qty" style="width:80px" type="number" id="qty" name="qty[]"></td>
+        <td><textarea class="form-control" style="min-width:200px" type="text" id="motif" name="motif[]"></textarea></td>
                                             <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Remove"><i class="fa fa-trash-o"></i></a></td>
                                         </tr>
                                         </tbody>
                                     </table>
-                                </div>
-                               
-                                
+                                    </div>
+                                    </div>
                             </div>
-                        </div>
-                        <div class="row" id="additionalOptions" style="display:none;">
-                            
-                            <!-- Option cards -->
-                                <div class="option-cards-stack">
+                            <div class="row" id="additionalOptions" style="display:none;">
+                               <!-- Option cards -->
+                               <div class="option-cards-stack">
                         <div class="option-card">
                             <div>
                             <div class="checkbox-group">
@@ -232,7 +220,7 @@
                         </div>
                         </div>
                         <div class="submit-section">
-                            <button class="btn btn-primary submit-btn m-r-10">Enregistrer et envoyer</button>
+                            <!-- <button class="btn btn-primary submit-btn m-r-10">Enregistrer et envoyer</button> -->
                             <button type="submit" class="btn btn-primary submit-btn">Enregistrer</button>
                         </div>
                     </form>
@@ -247,19 +235,19 @@
         {{-- add multiple row --}}
         <script>
             var rowIdx = 1;
-            $("#addBtn").on("click", function ()
-            {
-                // Adding a row inside the tbody.
-                $("#tableEstimate tbody").append(`
-                <tr id="R${++rowIdx}">
-                    <td class="row-index text-center"><p> ${rowIdx}</p></td>
-                    <td><input class="form-control" style="min-width:200px" type="text" id="item" name="item[]"></td>
-                    <td><input class="form-control"style="min-width:300px" type="text" id="description" name="description[]"></td>
-                    <td><input class="form-control qty" style="width:80px" type="text" id="qty" name="qty[]"></td>
-                    
-                    <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Remove"><i class="fa fa-trash-o"></i></a></td>
-                </tr>`);
-            });
+            $("#addBtn").on("click", function () {
+    // Adding a row inside the tbody.
+    $("#tableEstimate tbody").append(`
+    <tr id="R${++rowIdx}">
+        <td class="row-index text-center"><p> ${rowIdx}</p></td>
+        <td><input class="form-control" style="min-width:200px" type="text" id="item" name="item[]"></td>
+        <td><textarea class="form-control" style="min-width:300px" id="description" name="description[]"></textarea></td>
+        <td><input class="form-control qty" style="width:80px" type="number" id="qty" name="qty[]"></td>
+        <td><textarea class="form-control" style="min-width:200px" type="text" id="motif" name="motif[]"></textarea></td>
+    <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Remove"><i class="fa fa-trash-o"></i></a></td>
+    </tr>`);
+});
+
             $("#tableEstimate tbody").on("click", ".remove", function ()
             {
                 // Getting all the rows next to the row
@@ -290,48 +278,7 @@
                 // Decreasing total number of rows by 1.
                 rowIdx--;
             });
-            /* Calcule du prix
-
-            $("#tableEstimate tbody").on("input", ".unit_price", function () {
-                var unit_price = parseFloat($(this).val());
-                var qty = parseFloat($(this).closest("tr").find(".qty").val());
-                var total = $(this).closest("tr").find(".total");
-                total.val(unit_price * qty);
-
-                calc_total();
-            });
-
-            $("#tableEstimate tbody").on("input", ".qty", function () {
-                var qty = parseFloat($(this).val());
-                var unit_price = parseFloat($(this).closest("tr").find(".unit_price").val());
-                var total = $(this).closest("tr").find(".total");
-                total.val(unit_price * qty);
-                calc_total();
-            });
-            function calc_total() {
-                var sum = 0;
-                $(".total").each(function () {
-                sum += parseFloat($(this).val());
-                });
-                $(".subtotal").text(sum);
-                
-                var amounts = sum;
-                var tax     = 100;
-                $(document).on("change keyup blur", "#qty", function() 
-                {
-                    var qty = $("#qty").val();
-                    var discount = $(".discount").val();
-                    $(".total").val(amounts * qty);
-                    $("#sum_total").val(amounts * qty);
-                    $("#tax_1").val((amounts * qty)/tax);
-                    $("#grand_total").val((parseInt(amounts)) - (parseInt(discount)));
-                }); 
-            }
-            */
-
-        </script>
-        <script>
-             function toggleAdditionalOptions(value) {
+              function toggleAdditionalOptions(value) {
                 const additionalOptions = document.getElementById('additionalOptions');
                 additionalOptions.style.display = (value === 'achat') ? 'block' : 'none';
             }

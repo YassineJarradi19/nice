@@ -12,8 +12,7 @@ class EstimatesAdd extends Model
         'item',
         'estimate_number',
         'description',
-        'unit_cost',
         'qty',
-        'amount',
+        'motif'
     ];
 }

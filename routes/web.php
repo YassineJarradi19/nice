@@ -302,6 +302,8 @@ Route::controller(SalesController::class)->group(function () {
     Route::post('create/estimate/update', 'EstimateUpdateRecord')->middleware('auth')->name('create/estimate/update');
     Route::post('estimate_add/delete', 'EstimateAddDeleteRecord')->middleware('auth')->name('estimate_add/delete');
     Route::post('estimate/delete', 'EstimateDeleteRecord')->middleware('auth')->name('estimate/delete');
+    Route::get('/estimates', [SalesController::class, 'index'])->name('estimates.index');
+
     // ---------------------- payments  ---------------//
     Route::get('payments', 'Payments')->middleware('auth')->name('payments');
     Route::get('expenses/page', 'Expenses')->middleware('auth')->name('expenses/page');
