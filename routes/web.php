@@ -299,7 +299,7 @@ Route::controller(SalesController::class)->group(function () {
     Route::get('estimate/view/{estimate_number}', 'viewEstimateIndex')->middleware('auth');
 
     Route::post('create/estimate/save', 'createEstimateSaveRecord')->middleware('auth')->name('create/estimate/save');
-    Route::post('create/estimate/update', 'EstimateUpdateRecord')->middleware('auth')->name('create/estimate/update');
+    Route::post('create/estimate/update', 'updateEstimateRecord')->middleware('auth')->name('create/estimate/update');
     Route::post('estimate_add/delete', 'EstimateAddDeleteRecord')->middleware('auth')->name('estimate_add/delete');
     Route::post('estimate/delete', 'EstimateDeleteRecord')->middleware('auth')->name('estimate/delete');
     Route::get('/estimates', [SalesController::class, 'index'])->name('estimates.index');

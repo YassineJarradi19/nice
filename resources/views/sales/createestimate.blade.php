@@ -83,9 +83,9 @@
                                 
                                             <td>1</td>
                                             <td><input class="form-control" style="min-width:200px" type="text" id="item" name="item[]"></td>
-        <td><textarea class="form-control" style="min-width:300px" id="description" name="description[]"></textarea></td>
-        <td><input class="form-control qty" style="width:80px" type="number" id="qty" name="qty[]"></td>
-        <td><textarea class="form-control" style="min-width:200px" type="text" id="motif" name="motif[]"></textarea></td>
+                                            <td><textarea class="form-control" style="min-width:300px" id="description" name="description[]"></textarea></td>
+                                            <td><input class="form-control qty" style="width:80px" type="number" id="qty" name="qty[]"></td>
+                                            <td><textarea class="form-control" style="min-width:200px" type="text" id="motif" name="motif[]"></textarea></td>
                                             <td><a href="javascript:void(0)" class="text-danger font-18 remove" title="Remove"><i class="fa fa-trash-o"></i></a></td>
                                         </tr>
                                         </tbody>

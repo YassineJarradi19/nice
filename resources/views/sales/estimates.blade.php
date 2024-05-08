@@ -27,7 +27,7 @@
 
            </div>
 
-            <div id="filter-panel" class="collapse filter-panel">
+            <div id="filter-panel" class=" filter-panel">
                 <div class="panel panel-default">
                     <div class="panel-body pb-3">
                         <form action="{{ route('estimates.index') }}" method="GET">

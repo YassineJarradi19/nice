@@ -20,8 +20,13 @@ return new class extends Migration
             $table->string('estimate_date')->nullable();
             $table->string('expiry_date')->nullable();
             $table->text('other_information')->nullable();
-            $table->timestamps();
+            $table->unsignedBigInteger('user_id');  // Add user_id column
             
+            // Foreign key constraint
+            $table->foreign('user_id')->references('id')->on('users')
+                  ->onDelete('cascade');  // Automatically deletes estimates when the associated user is deleted
+
+            $table->timestamps();
         });
     }
 
@@ -32,6 +37,10 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('estimates');
+        Schema::table('estimates', function (Blueprint $table) {
+            $table->dropForeign(['user_id']);  // Drop the foreign key constraint
+        });
+
+        Schema::dropIfExists('estimates');  // Correctly use dropIfExists to drop the table
     }
 };

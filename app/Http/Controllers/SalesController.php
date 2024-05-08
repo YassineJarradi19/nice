@@ -7,23 +7,32 @@ use App\Models\Expense;
 use App\Models\Estimates;
 use App\Models\EstimatesAdd;
 use App\Models\EstimateDetail;
-
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
 
 class SalesController extends Controller
 {
     /** page estimates */
-    public function estimatesIndex()
-    {
-        $estimates     = DB::table('estimates')->get();
-        $estimatesJoin = DB::table('estimates')
-            ->join('estimates_adds', 'estimates.estimate_number', '=', 'estimates_adds.estimate_number')
-            ->select('estimates.*', 'estimates_adds.*')
-            ->get();
 
-        return view('sales.estimates',compact('estimates','estimatesJoin'));
-    }
+public function estimatesIndex()
+{
+    // Fetch only the estimates that belong to the logged-in user
+    $userId = Auth::id(); // Get the ID of the currently logged-in user
+    
+    $estimates = DB::table('estimates')
+        ->where('user_id', $userId) // Filter to only include estimates from the logged-in user
+        ->get();
+
+    $estimatesJoin = DB::table('estimates')
+        ->join('estimates_adds', 'estimates.estimate_number', '=', 'estimates_adds.estimate_number')
+        ->where('estimates.user_id', $userId) // Filter to only include estimates from the logged-in user
+        ->select('estimates.*', 'estimates_adds.*')
+        ->get();
+
+    return view('sales.estimates', compact('estimates', 'estimatesJoin'));
+}
+
 
     /** page create estimates */
     public function createEstimateIndex()
@@ -69,6 +78,8 @@ class SalesController extends Controller
         $estimates->estimate_date = $request->estimate_date;
         $estimates->expiry_date = $request->expiry_date;
         
+        $estimates->user_id = Auth::id(); // Save with the user_id of the logged-in user
+
         $estimates->save();
 
         $estimate_number = DB::table('estimates')->orderBy('estimate_number', 'DESC')->select('estimate_number')->first();
@@ -218,54 +229,134 @@ public function index(Request $request)
 
 
     /** update record estimate */
-    public function EstimateUpdateRecord(Request $request)
-    {
-        DB::beginTransaction();
-        try {
-           
-            $update = [
-                'id'                => $request->id,
-                'client'            => $request->client,
-                'project'           => $request->project,
-                'email'             => $request->email,
-                'tax'               => $request->tax,
-                'client_address'    => $request->client_address,
-                'billing_address'   => $request->billing_address,
-                'estimate_date'     => $request->estimate_date,
-                'expiry_date'       => $request->expiry_date,
-                'total'             => $request->total,
-                'tax_1'             => $request->tax_1,
-                'discount'          => $request->discount,
-                'grand_total'       => $request->grand_total,
-                'other_information' => $request->other_information,
-            ];
-            Estimates::where('id',$request->id)->update($update);
-            /** delete record */
-            foreach ($request->estimates_adds as $key => $items) {
-                DB::table('estimates_adds')->where('id', $request->estimates_adds[$key])->delete();
-            }
-            /** insert new record */
-            foreach($request->item as $key => $item)
-            {
-                $estimatesAdd['estimate_number'] = $request->estimate_number;
-                $estimatesAdd['item']            = $request->item[$key];
-                $estimatesAdd['description']     = $request->description[$key];
-                $estimatesAdd['unit_cost']       = $request->unit_cost[$key];
-                $estimatesAdd['qty']             = $request->qty[$key];
-                $estimatesAdd['amount']          = $request->amount[$key];
+    public function updateEstimateRecord(Request $request)
+{
+    $request->validate([
+        'type_demande' => 'required|string|in:fourniture,achat',
+        'estimate_date' => 'required|date',
+        'expiry_date' => 'required|date',
+        'id' => 'required|integer|exists:estimates,id', // Make sure the estimate exists
+    ]);
 
-                EstimatesAdd::create($estimatesAdd);
+    DB::beginTransaction();
+    try {
+        $estimates = Estimates::findOrFail($request->id);
+        $estimates->type_demande = $request->type_demande;
+        $estimates->estimate_date = $request->estimate_date;
+        $estimates->expiry_date = $request->expiry_date;
+        
+        $estimates->save();
+
+        // Update related items
+        foreach ($request->item as $key => $item) {
+            $estimateAddId = $request->estimates_adds[$key];
+            $estimatesAdd = EstimatesAdd::find($estimateAddId);
+            if ($estimatesAdd) {
+                $estimatesAdd->item = $item;
+                $estimatesAdd->description = $request->description[$key];
+                $estimatesAdd->qty = $request->qty[$key];
+                $estimatesAdd->motif = $request->motif[$key];
+                $estimatesAdd->save();
             }
-           
-            DB::commit();
-            Toastr::success('Updated Estimates successfully :)','Success');
-            return redirect()->back();
-        } catch(\Exception $e) {
-            DB::rollback();
-            Toastr::error('Update Estimates fail :)','Error');
-            return redirect()->back();
-        } 
+        }
+
+        // Handling additional options if 'achat' is selected
+        if ($request->type_demande === 'achat') {
+            $details = [];
+
+            EstimateDetail::where('estimate_id', $estimates->id)->delete(); // Clear existing details
+
+            $this->processDetails($details, $request, $estimates->id);
+
+            // Save all new details
+            EstimateDetail::insert($details);
+        }
+
+        DB::commit();
+        Toastr::success('Mise à jour de la demande réussie', 'Success');
+        return redirect()->route('form/estimates/page');
+    } catch (\Exception $e) {
+        DB::rollback();
+        Toastr::error('Mise à jour de la demande échouée : ' . $e->getMessage(), 'Error');
+        return redirect()->back();
     }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+private function processDetails(&$details, $request, $estimateId)
+{
+    // Pieces to request
+    if (isset($request->piece_joint)) {
+        foreach ($request->piece_joint as $piece) {
+            $details[] = [
+                'estimate_id' => $estimateId,
+                'detail_type' => 'Pieces to Request',
+                'detail_value' => $piece
+            ];
+        }
+    }
+
+    // Elements required at reception
+    if (isset($request->element_exiges_lors_de_la_reception)) {
+        foreach ($request->element_exiges_lors_de_la_reception as $element) {
+            $details[] = [
+                'estimate_id' => $estimateId,
+                'detail_type' => 'Elements Required at Reception',
+                'detail_value' => $element
+            ];
+        }
+    }
+
+    // Participation in consultation/selection
+    if ($request->has('participation_a_la_consultation_selection')) {
+        $details[] = [
+            'estimate_id' => $estimateId,
+            'detail_type' => 'Participation in Consultation/Selection',
+            'detail_value' => $request->participation_a_la_consultation_selection
+        ];
+    }
+
+    // Budgetary status of purchase
+    if (isset($request->achat_demande)) {
+        foreach ($request->achat_demande as $status) {
+            $details[] = [
+                'estimate_id' => $estimateId,
+                'detail_type' => 'Budgetary Status of Purchase',
+                'detail_value' => $status
+            ];
+        }
+    }
+}
+
 
     /** delete record estimate add */
     public function EstimateAddDeleteRecord(Request $request)
