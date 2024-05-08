@@ -21,42 +21,60 @@
             </div>
             <!-- /Page Header -->
             
-            <!-- Search Filter -->
-            <div class="row filter-row">
-                <div class="col-sm-6 col-md-3">  
-                    <div class="form-group form-focus">
-                        <div class="cal-icon">
-                            <input class="form-control floating datetimepicker" type="text">
-                        </div>
-                        <label class="focus-label">From</label>
+           <!-- Filter Panel -->
+           <div class="row pb-3">
+           <a href="#" class="btn add-btn-filter" data-toggle="collapse" data-target="#filter-panel"><i class="fa fa-filter"></i> Filter</a>
+
+           </div>
+
+            <div id="filter-panel" class="collapse filter-panel">
+                <div class="panel panel-default">
+                    <div class="panel-body pb-3">
+                        <form action="{{ route('estimates.index') }}" method="GET">
+                            <div class="row">
+                                <div class="col-md-3 col-12">
+                                    <div class="form-group">
+                                        <label>Type de demande</label>
+                                        <select class="form-control" name="type_demande">
+                                            <option value="">toute les demandes</option>
+                                            <option value="fourniture">Fourniture</option>
+                                            <option value="achat">Achat</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-12">
+                                    <div class="form-group">
+                                        <label>Date From</label>
+                                        <input type="date" class="form-control" name="date_from">
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-12">
+                                    <div class="form-group">
+                                        <label>Date To</label>
+                                        <input type="date" class="form-control" name="date_to">
+                                    </div>
+                                </div>
+                                <div class="col-md-3 col-12">
+                                    <div class="form-group">
+                                        <label>Status</label>
+                                        <select class="form-control" name="status">
+                                            <option value="">toute les demandes</option>
+                                            <option value="Validée">Validée</option>
+                                            <option value="Refusée">Refusée</option>
+                                            <option value="En cours de validation">En cours de validation</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <button type="submit" class=" btn btn-secondary ">Apply Filter</button>
+                        </form>
                     </div>
                 </div>
-                <div class="col-sm-6 col-md-3">  
-                    <div class="form-group form-focus">
-                        <div class="cal-icon">
-                            <input class="form-control floating datetimepicker" type="text">
-                        </div>
-                        <label class="focus-label">To</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3"> 
-                    <div class="form-group form-focus select-focus">
-                        <select class="select floating"> 
-                            <option>Selectionner status</option>
-                            <option>Validée</option>
-                            <option>Refusée</option>
-                            <option>En cours de validation</option>
-                        </select>
-                        <label class="focus-label">Status</label>
-                    </div>
-                </div>
-                <div class="col-sm-6 col-md-3">  
-                    <a href="#" class="btn btn-success btn-block"> Rechercher </a>  
-                </div>     
             </div>
-            <!-- /Search Filter -->
+
+
             
-            <div class="row">
+            <div class="row ">
                 <div class="col-md-12">
                     <div class="table-responsive">
                         <table class="table table-striped custom-table mb-0">

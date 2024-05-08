@@ -27,7 +27,7 @@
                             <div class="form-group">
                                 <label>Type de demande <span class="text-danger">*</span></label>
                                     <select class="form-control" id="type_demande" name="type_demande" onchange="toggleAdditionalOptions(this.value)">
-                                        <option value="">Select Type</option>
+                                        
                                         <option value="fourniture">Fourniture</option>
                                         <option value="achat">Achat</option>
                                     </select>

@@ -143,18 +143,34 @@ class SalesController extends Controller
     }
 }
 
-public function showEstimates(Request $request)
+public function index(Request $request)
 {
-    $sortField = $request->get('sort', 'estimate_number'); // Default sort by estimate number
-    $sortDirection = $request->get('direction', 'asc'); // Default sort direction
+    $query = Estimates::query();
 
-    $estimates = Estimates::orderBy($sortField, $sortDirection)->paginate(10);
+    // Filter by type of demand
+    if ($request->filled('type_demande')) {
+        $query->where('type_demande', $request->type_demande);
+    }
 
-    // Toggle sort direction for next click
-    $sortDirection = $sortDirection === 'asc' ? 'desc' : 'asc';
+    // Filter by date range
+    if ($request->filled('date_from')) {
+        $query->whereDate('estimate_date', '>=', $request->date_from);
+    }
 
-    return view('estimates.index', compact('estimates', 'sortDirection'));
+    if ($request->filled('date_to')) {
+        $query->whereDate('expiry_date', '<=', $request->date_to);
+    }
+
+    // Filter by status
+    if ($request->filled('status')) {
+        $query->where('status', $request->status);
+    }
+
+    $estimates = $query->paginate(10);
+
+    return view('sales.estimates', compact('estimates'));
 }
+
 
 
 

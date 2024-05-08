@@ -78,10 +78,9 @@
                                                 <th style="width: 20px">#</th>
                                                 <th class="col-sm-2">Article</th> <!-- Hia item f db estimate_adds-->
                                                 <th class="col-md-6">Description</th> <!-- Hia description f db estimate_adds-->
-                                                <!--<th style="width:100px;">Prix unitaire</th>  Hia unit_cost f db estimate_adds
-                                                -->
+                                                
                                                 <th style="width:80px;">Quantité</th>  <!-- Hia qty f db estimate_adds-->
-                                                <!--<th>Total</th>-->
+                                                
                                                 <th> </th>
                                             </tr>
                                         </thead>
@@ -97,18 +96,12 @@
                                             <td>
                                                 <input class="form-control" type="text" id="description" name="description[]" value="{{ $item->description }}" style="min-width:150px">
                                             </td>
-                                            <!--
-                                            <td>
-                                                <input class="form-control unit_price" style="width:100px" type="text"id="unit_cost" name="unit_cost[]" value="{{ $item->unit_cost }}">
-                                            </td> -->
+                                            
 
                                             <td>
                                                 <input class="form-control qty" style="width:80px" type="text" id="qty" name="qty[]" value="{{ $item->qty }}">
                                             </td>
-                                            <!--
-                                            <td>
-                                                <input class="form-control total" style="width:120px" id="amount" name="amount[]" type="text" value="{{ $item->amount }}" readonly>
-                                            </td> -->
+                                            
                                             @if($key =='1')
                                             <td><a href="javascript:void(0)" class="text-success font-18" title="Add" id="addBtn"><i class="fa fa-plus"></i></a></td>
                                             @endif
@@ -122,45 +115,7 @@
                                         </tbody>
                                     </table>
                                 </div>
-                               <!-- <div class="table-responsive">
-                                    <table class="table table-hover table-white">
-                                        <tbody>
-                                            <tr>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td></td>
-                                                <td class="text-right">Total</td>
-                                                <td>
-                                                    <input class="form-control text-right" type="text" id="sum_total" name="total" value="{{$estimatesJoin[0]->total }}" readonly>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="5" style="text-align: right">Tax</td>
-                                                <td style="text-align: right;width: 230px">
-                                                    <input class="form-control text-right" type="text"id="tax_1" name="tax_1" value="{{$estimatesJoin[0]->tax_1 }}" readonly>
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="5" style="text-align: right">
-                                                    Discount %
-                                                </td>
-                                                <td style="text-align: right; width: 230px">
-                                                    <input class="form-control text-right discount" type="text" id="discount" name="discount" value="{{$estimatesJoin[0]->discount }}">
-                                                </td>
-                                            </tr>
-                                            <tr>
-                                                <td colspan="5" style="text-align: right; font-weight: bold">
-                                                    Grand Total
-                                                </td>
-                                                <td style="text-align: right; font-weight: bold; font-size: 16px;width: 230px">
-                                                    <input class="form-control text-right" type="text" id="grand_total" name="grand_total" value="{{$estimatesJoin[0]->grand_total }}" readonly>
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>                               
-                                </div>
-                                -->
+                               
                             </div>
                         </div>
                         <div class="submit-section">
@@ -260,44 +215,7 @@
                 rowIdx--;
             });
 
-            /* Calcul du prix
-
-            $("#tableEstimate tbody").on("input", ".unit_price", function () {
-                var unit_price = parseFloat($(this).val());
-                var qty = parseFloat($(this).closest("tr").find(".qty").val());
-                var total = $(this).closest("tr").find(".total");
-                total.val(unit_price * qty);
-
-                calc_total();
-            });
-
-            $("#tableEstimate tbody").on("input", ".qty", function () {
-                var qty = parseFloat($(this).val());
-                var unit_price = parseFloat($(this).closest("tr").find(".unit_price").val());
-                var total = $(this).closest("tr").find(".total");
-                total.val(unit_price * qty);
-                calc_total();
-            });
-            function calc_total() {
-                var sum = 0;
-                $(".total").each(function () {
-                sum += parseFloat($(this).val());
-                });
-                $(".subtotal").text(sum);
-                
-                var amounts = sum;
-                var tax     = 100;
-                $(document).on("change keyup blur", "#qty", function() 
-                {
-                    var qty = $("#qty").val();
-                    var discount = $(".discount").val();
-                    $(".total").val(amounts * qty);
-                    $("#sum_total").val(amounts * qty);
-                    $("#tax_1").val((amounts * qty)/tax);
-                    $("#grand_total").val((parseInt(amounts)) - (parseInt(discount)));
-                }); 
-            }
-            */
+            
         </script>
     @endsection
 @endsection

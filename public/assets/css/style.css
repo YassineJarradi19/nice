@@ -1882,6 +1882,26 @@ table.dataTable thead > tr > td.sorting {
 .add-btn i {
     margin-right: 5px;
 }
+
+
+
+
+.add-btn-filter {
+    background-color: var(--blue);
+    border: 1px solid var(--blue);
+    border-radius: 50px;
+    color: #fff;
+    float: right;
+    font-weight: 500;
+    min-width: 140px;
+}
+.add-btn-filter{
+    color: white;
+}
+
+.add-btn-filter i {
+    margin-right: 5px;
+}
 .cal-icon {
     position: relative;
     width: 100%;
