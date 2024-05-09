@@ -21,6 +21,8 @@ use App\Http\Controllers\TrainingController;
 use App\Http\Controllers\TrainersController;
 use App\Http\Controllers\TrainingTypeController;
 use App\Http\Controllers\SalesController;
+use App\Http\Controllers\UserController;
+
 use App\Http\Controllers\PersonalInformationController;
 
 
@@ -320,4 +322,11 @@ Route::controller(SalesController::class)->group(function () {
 Route::controller(PersonalInformationController::class)->group(function () {
     Route::post('user/information/save', 'saveRecord')->middleware('auth')->name('user/information/save');
 });*/
+
+Route::group(['middleware' => ['auth', 'role:admin']], function () {
+    Route::get('/user/manage', [UserController::class, 'index'])->name('user.manage');
+    Route::post('/user/create', [UserController::class, 'store'])->name('user.create');
+    Route::post('/user/update/{user}', [UserController::class, 'update'])->name('user.update');
+    Route::post('/user/delete/{user}', [UserController::class, 'destroy'])->name('user.delete');
+});
 

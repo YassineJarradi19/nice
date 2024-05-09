@@ -154,9 +154,12 @@ public function estimatesIndex()
     }
 }
 
+
+
 public function index(Request $request)
 {
-    $query = Estimates::query();
+    $userId = Auth::id(); // Get the ID of the currently logged-in user
+    $query = Estimates::where('user_id', $userId); // Start the query with a filter for the logged-in user
 
     // Filter by type of demand
     if ($request->filled('type_demande')) {
@@ -177,10 +180,12 @@ public function index(Request $request)
         $query->where('status', $request->status);
     }
 
+    // Retrieve the results with pagination
     $estimates = $query->paginate(10);
 
     return view('sales.estimates', compact('estimates'));
 }
+
 
 
 
