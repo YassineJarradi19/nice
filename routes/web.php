@@ -22,6 +22,8 @@ use App\Http\Controllers\TrainersController;
 use App\Http\Controllers\TrainingTypeController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ValidatorController;
+
 
 use App\Http\Controllers\PersonalInformationController;
 
@@ -323,10 +325,36 @@ Route::controller(PersonalInformationController::class)->group(function () {
     Route::post('user/information/save', 'saveRecord')->middleware('auth')->name('user/information/save');
 });*/
 
-Route::group(['middleware' => ['auth', 'role:admin']], function () {
-    Route::get('/user/manage', [UserController::class, 'index'])->name('user.manage');
-    Route::post('/user/create', [UserController::class, 'store'])->name('user.create');
-    Route::post('/user/update/{user}', [UserController::class, 'update'])->name('user.update');
-    Route::post('/user/delete/{user}', [UserController::class, 'destroy'])->name('user.delete');
-});
+// In your routes/web.php
 
+    
+    Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
+    Route::post('user/store', [UserController::class, 'store'])->name('user.store');
+
+
+
+    Route::get('/user/manage', 'UserController@manage')->name('user.manage');
+    Route::post('/user/update/{id}', 'UserController@update')->name('user.update');
+
+
+
+
+   
+
+    // Route to display the user list page
+    Route::get('/users', [UserController::class, 'index'])->name('users.index');
+    
+    Route::get('modify/user/{id}/validators', [UserController::class, 'modifyValidators'])->name('modify.validators');
+    Route::put('modify/user/{id}/validators', [UserController::class, 'updateValidators'])->name('update.validators');
+    Route::delete('modify/user/{userId}/validator/{validatorId}', [UserController::class, 'removeValidator'])->name('remove.validator');
+
+
+    // routes/web.php
+
+
+// Validator-specific routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/validator/users', [ValidatorController::class, 'users'])->name('validator.users');
+    Route::get('/validator/requests', [ValidatorController::class, 'requests'])->name('validator.requests');
+});
+Route::post('/send-estimate', [ValidatorController::class, 'sendEstimate'])->name('send.estimate');

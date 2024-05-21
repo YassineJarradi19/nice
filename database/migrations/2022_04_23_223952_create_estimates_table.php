@@ -17,9 +17,14 @@ return new class extends Migration
             $table->id();
             $table->string('estimate_number');
             $table->string('type_demande');
-            $table->string('estimate_date')->nullable();
-            $table->string('expiry_date')->nullable();
-            $table->text('other_information')->nullable();
+            $table->date('estimate_date')->nullable();
+            $table->date('expiry_date')->nullable();
+            $table->string('status')->nullable();
+            $table->string('validators')->nullable();
+
+            $table->text('validation_orther')->nullable();
+
+
             $table->unsignedBigInteger('user_id');  // Add user_id column
             
             // Foreign key constraint

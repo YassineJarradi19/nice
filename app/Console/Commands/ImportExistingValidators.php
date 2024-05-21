@@ -1,40 +1,36 @@
 <?php
 
-namespace App\Providers;
+namespace App\Console\Commands;
 
-use Illuminate\Support\ServiceProvider;
+use Illuminate\Console\Command;
 use App\Models\User;
 use App\Models\Validator;
 
-class AppServiceProvider extends ServiceProvider
+class ImportExistingValidators extends Command
 {
     /**
-     * Register any application services.
+     * The name and signature of the console command.
      *
-     * @return void
+     * @var string
      */
-    public function register()
-    {
-        //
-    }
+    protected $signature = 'import:validators';
 
     /**
-     * Bootstrap any application services.
+     * The console command description.
      *
-     * @return void
+     * @var string
      */
-    public function boot()
-    {
-        $this->importValidators();
-    }
+    protected $description = 'Import existing users with role_name validator into validators table';
 
     /**
-     * Import existing users with role_name 'validator'.
+     * Execute the console command.
+     *
+     * @return int
      */
-    protected function importValidators()
+    public function handle()
     {
         // Get all users with role_name 'validator'
-        $users = User::where('role_name', 'validator')->get();
+        $users = User::where('role_name', 'Validateur')->get();
 
         foreach ($users as $user) {
             // Check if the validator already exists in the validators table
@@ -63,5 +59,10 @@ class AppServiceProvider extends ServiceProvider
                 ]);
             }
         }
+
+        $this->info('Existing validators have been imported successfully.');
+
+        return 0;
     }
 }
+

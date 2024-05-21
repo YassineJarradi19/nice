@@ -1883,9 +1883,6 @@ table.dataTable thead > tr > td.sorting {
     margin-right: 5px;
 }
 
-
-
-
 .add-btn-filter {
     background-color: var(--blue);
     border: 1px solid var(--blue);
@@ -1895,7 +1892,7 @@ table.dataTable thead > tr > td.sorting {
     font-weight: 500;
     min-width: 140px;
 }
-.add-btn-filter{
+.add-btn-filter {
     color: white;
 }
 
@@ -8912,4 +8909,7 @@ ul.comment-list li ul.children {
     .option-cards-stack {
         grid-template-columns: repeat(1, 1fr);
     }
+}
+.bg-custom-blue {
+    background-color: var(--blue);
 }

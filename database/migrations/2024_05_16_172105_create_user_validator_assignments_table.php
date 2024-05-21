@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateRoleTypeUsersTable extends Migration
+class CreateUserValidatorAssignmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,18 +13,12 @@ class CreateRoleTypeUsersTable extends Migration
      */
     public function up()
     {
-        Schema::create('role_type_users', function (Blueprint $table) {
+        Schema::create('user_validator_assignments', function (Blueprint $table) {
             $table->id();
-            $table->string('role_type')->nullable();
+            $table->foreignId('user_id')->constrained('users')->onDelete('cascade');
+            $table->foreignId('validator_id')->constrained('validators')->onDelete('cascade');
             $table->timestamps();
         });
-
-        DB::table('role_type_users')->insert([
-            
-            ['role_type' => 'Normal'],
-            ['role_type' => 'Acheteur'],
-            ['role_type' => 'Validateur']
-        ]);
     }
 
     /**
@@ -34,6 +28,6 @@ class CreateRoleTypeUsersTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('role_type_users');
+        Schema::dropIfExists('user_validator_assignments');
     }
 }

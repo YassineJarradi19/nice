@@ -15,4 +15,8 @@ class EstimatesAdd extends Model
         'qty',
         'motif'
     ];
+    public function estimate()
+    {
+        return $this->belongsTo(Estimates::class);
+    }
 }
