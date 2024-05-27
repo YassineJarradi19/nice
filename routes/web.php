@@ -358,3 +358,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/validator/requests', [ValidatorController::class, 'requests'])->name('validator.requests');
 });
 Route::post('/send-estimate', [ValidatorController::class, 'sendEstimate'])->name('send.estimate');
+
+use App\Http\Controllers\EstimateController;
+
+Route::post('/estimate/{id}/send', [SalesController::class, 'sendEstimate'])->name('estimate.send');
+
+
+
+
+
+Route::get('/validator/estimates', [ValidatorController::class, 'showAssignedEstimates'])->name('validator.estimates');

@@ -35,4 +35,9 @@ class Validator extends Model
     {
         return $this->belongsToMany(User::class, 'user_validator_assignments');
     }
+
+    public function estimates()
+    {
+        return $this->belongsToMany(Estimates::class, 'user_validator_assignments', 'validator_id', 'estimate_id');
+    }
 }

@@ -10,6 +10,7 @@ use App\Models\EstimateDetail;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use Brian2694\Toastr\Facades\Toastr;
+use Illuminate\Support\Facades\Mail;
 
 class SalesController extends Controller
 {
@@ -187,6 +188,28 @@ public function index(Request $request)
 }
 
 
+
+
+
+
+
+
+    public function sendEstimate(Request $request, $id)
+    {
+        // Retrieve the estimate as a model instance
+        $estimate = Estimates::findOrFail($id);
+
+        // Retrieve the user's validators
+        $user = $estimate->user;
+        $validators = $user->validators;
+
+        // Send the estimate to each validator
+        foreach ($validators as $validator) {
+            Mail::to($validator->email)->send(new SendEstimate($estimate));
+        }
+
+        return back()->with('success', 'Estimate sent to validators.');
+    }
 
 
 

@@ -49,7 +49,7 @@ class Estimates extends Model
      */
     public function user()
     {
-        return $this->belongsTo('App\Models\User', 'user_id');
+        return $this->belongsTo(User::class);
     }
 
     public function items()
@@ -60,5 +60,11 @@ class Estimates extends Model
     public function details()
     {
         return $this->hasMany(EstimateDetail::class);
+    }
+
+
+    public function validators()
+    {
+        return $this->belongsToMany(Validator::class, 'user_validator_assignments', 'estimate_id', 'validator_id');
     }
 }

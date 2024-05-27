@@ -58,9 +58,19 @@ class User extends Authenticatable
     /**
      * Get the estimates for the user.
      */
+    public function validators()
+    {
+        return $this->belongsToMany(Validator::class, 'user_validator_assignments');
+    }
+
     public function estimates()
     {
         return $this->hasMany(Estimates::class);
+    }
+
+    public function assignedUsers()
+    {
+        return $this->belongsToMany(User::class, 'user_validator_assignments', 'validator_id', 'user_id');
     }
 
 protected static function boot()
