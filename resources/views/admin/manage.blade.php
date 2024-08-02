@@ -1,5 +1,8 @@
 @extends('layouts.master')
-
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title> Les utilisateurs</title>
 @section('content')
     {!! Toastr::message() !!} <!-- Flash message display -->
 
@@ -100,8 +103,12 @@
                                             <div class="dropdown dropdown-action">
                                                 <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
                                                 <div class="dropdown-menu dropdown-menu-right">
-                                                    <a class="dropdown-item" href="{{ url('edit/user/'.$user->id) }}"><i class="fa fa-pencil m-r-5"></i> Editer</a>
-                                                    <a class="dropdown-item delete_user" href="#" data-toggle="modal" data-target="#delete_user" data-id="{{ $user->id }}"><i class="fa fa-trash-o m-r-5"></i> Supprimer</a>
+                                                    <a class="dropdown-item" href="{{ route('user.edit', $user->id) }}"><i class="fa fa-pencil m-r-5"></i> Editer</a>
+                                                    <form action="{{ route('user.destroy', $user->id) }}" method="POST" style="display:inline;">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                        <button type="submit" class="dropdown-item"><i class="fa fa-trash-o m-r-5"></i> Supprimer</button>
+                                                    </form>
                                                     <a class="dropdown-item" href="{{ url('modify/user/'.$user->id.'/validators') }}"><i class="fa fa-users m-r-5"></i> Modifier les validateurs</a>
                                                 </div>
                                             </div>
@@ -114,16 +121,23 @@
                                 @endforelse
                             </tbody>
                         </table>
+                        {{ $users->links() }}
                     </div>
                 </div>
             </div>
-            <!-- /Users Table -->
         </div>
-        <!-- /Page Content -->
     </div>
-    <!-- /Page Wrapper -->
+@section('script')
+    <script>
+        $(document).on('click','.delete_user',function() {
+            var _this = $(this).parents('tr');
+            $('.e_id').val(_this.find('.ids').text());
+            $('.estimate_number').val(_this.find('.estimate_number').text());
+        });
+    </script>
+@endsection
 
-    @section('script')
+    <!-- @section('script')
         {{-- delete model --}}
         <script>
             $(document).on('click','.delete_estimate',function()
@@ -133,5 +147,4 @@
                 $('.estimate_number').val(_this.find('.estimate_number').text());
             });
         </script>
-    @endsection
-@endsection
+    @endsection -->

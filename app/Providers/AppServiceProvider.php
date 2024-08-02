@@ -5,6 +5,7 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Models\User;
 use App\Models\Validator;
+use Carbon\Carbon;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -25,7 +26,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->importValidators();
+        if (!$this->app->runningInConsole() || $this->app->runningUnitTests()) {
+            $this->importValidators();
+        }
+        
+        Carbon::setLocale('fr');
     }
 
     /**
@@ -52,6 +57,7 @@ class AppServiceProvider extends ServiceProvider
                     'status' => $user->status,
                     'role_name' => $user->role_name,
                     'admin' => $user->admin,
+                    'gestionnaire' => $user->gestionnaire,
                     'avatar' => $user->avatar,
                     'position' => $user->position,
                     'department' => $user->department,

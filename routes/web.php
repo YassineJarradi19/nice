@@ -23,6 +23,10 @@ use App\Http\Controllers\TrainingTypeController;
 use App\Http\Controllers\SalesController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ValidatorController;
+use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DemanderecuController;
+use App\Http\Controllers\ArticleController;
+
 
 
 use App\Http\Controllers\PersonalInformationController;
@@ -307,7 +311,11 @@ Route::controller(SalesController::class)->group(function () {
     Route::post('estimate_add/delete', 'EstimateAddDeleteRecord')->middleware('auth')->name('estimate_add/delete');
     Route::post('estimate/delete', 'EstimateDeleteRecord')->middleware('auth')->name('estimate/delete');
     Route::get('/estimates', [SalesController::class, 'index'])->name('estimates.index');
+    Route::get('estimate/print/{estimate_number}', [SalesController::class, 'printEstimate'])->name('estimate.print');
+    Route::post('estimates/create-for-user', [SalesController::class, 'createEstimateForUser'])->name('estimates.createForUser');
 
+// routes/web.php
+Route::get('estimates/create-for-user', [SalesController::class, 'showCreateEstimateForUser'])->name('estimates.showCreateForUser');
     // ---------------------- payments  ---------------//
     Route::get('payments', 'Payments')->middleware('auth')->name('payments');
     Route::get('expenses/page', 'Expenses')->middleware('auth')->name('expenses/page');
@@ -327,14 +335,15 @@ Route::controller(PersonalInformationController::class)->group(function () {
 
 // In your routes/web.php
 
-    
+Route::resource('users', UserController::class);
     Route::get('/user/create', [UserController::class, 'create'])->name('user.create');
     Route::post('user/store', [UserController::class, 'store'])->name('user.store');
-
-
+    Route::get('edit/user/{id}', [UserController::class, 'edit'])->name('user.edit');
+    Route::put('update/user/{id}', [UserController::class, 'update'])->name('user.update');
+    Route::delete('delete/user/{id}', [UserController::class, 'destroy'])->name('user.destroy');
 
     Route::get('/user/manage', 'UserController@manage')->name('user.manage');
-    Route::post('/user/update/{id}', 'UserController@update')->name('user.update');
+  
 
 
 
@@ -358,3 +367,68 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/validator/requests', [ValidatorController::class, 'requests'])->name('validator.requests');
 });
 Route::post('/send-estimate', [ValidatorController::class, 'sendEstimate'])->name('send.estimate');
+
+Route::get('/validator/requests', [ValidatorController::class, 'showRequests'])->name('validator.requests');
+
+// routes/web.php
+
+Route::post('estimates/validate/{estimate_number}', [SalesController::class, 'validateEstimateByNumber'])->name('estimates.validate');
+
+
+
+Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+
+
+Route::post('/estimates/refuse/{estimate_number}', [SalesController::class, 'refuseEstimate'])->name('estimates.refuse');
+
+
+Route::get('/demanderecu', [DemanderecuController::class, 'index'])->name('demanderecu');
+// web.php
+
+
+Route::get('articles', [ArticleController::class, 'index'])->name('articles.index');
+Route::get('articles/create', [ArticleController::class, 'create'])->name('articles.create');
+Route::post('articles', [ArticleController::class, 'store'])->name('articles.store');
+Route::get('articles/{article}/edit', [ArticleController::class, 'edit'])->name('articles.edit');
+Route::put('articles/{article}', [ArticleController::class, 'update'])->name('articles.update');
+Route::delete('articles/{article}', [ArticleController::class, 'destroy'])->name('articles.destroy');
+Route::post('/estimates/{estimate_number}/deliver', [ArticleController::class, 'deliver'])->name('estimates.deliver');
+Route::post('/estimates/{estimate_number}/annuler', [ArticleController::class, 'annuler'])->name('estimates.annuler');
+Route::post('/estimates/{estimate_number}/commande', [ArticleController::class, 'commande'])->name('estimates.commande');
+Route::post('/estimates/{estimate_number}/receive', [ArticleController::class, 'receive'])->name('estimates.receive');
+
+
+
+
+
+
+
+// routes/web.php
+
+Route::post('estimates/{estimate_number}/items/{item_id}/commande', [ArticleController::class, 'commandeItem'])->name('estimates.commandeItem');
+Route::post('estimates/{estimate_number}/items/{item_id}/receive', [ArticleController::class, 'receiveItem'])->name('estimates.receiveItem');
+Route::post('estimates/{estimate_number}/items/{item_id}/deliver', [ArticleController::class, 'deliverItem'])->name('estimates.deliverItem');
+Route::post('estimates/{estimate_number}/items/{item_id}/refuse', [ArticleController::class, 'annulerItem'])->name('estimates.refuseItem');
+
+
+// In routes/web.php
+Route::post('/session/hide-main-buttons', function (Request $request) {
+    $estimateNumber = $request->input('estimate_number');
+    session()->put('hide_top_buttons_' . $estimateNumber, true); // Use the estimate number as part of the key
+    return response()->json(['success' => true]);
+})->name('session.hideMainButtons');
+
+Route::post('/estimates/{estimate_number}/start-managing', [SalesController::class, 'startManagingEstimate'])->name('estimates.startManaging');
+Route::post('/estimates/{estimate_number}/stop-managing', [SalesController::class, 'stopManagingEstimate'])->name('estimates.stopManaging');
+
+
+
+
+
+
+
+
+Route::post('/estimates/{estimate_number}/updateManageBy', [SalesController::class, 'updateManageBy'])->name('estimates.updateManageBy');
+
+
+Route::get('/received-estimates', [DemanderecuController::class, 'indexACH'])->name('received.estimates.index');

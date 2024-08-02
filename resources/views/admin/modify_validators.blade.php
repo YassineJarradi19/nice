@@ -1,5 +1,8 @@
 @extends('layouts.master')
-
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title>Ajout,edit validateurs</title>
 @section('content')
 <div class="page-wrapper mt-5 pl-5">
 <h2 class="mb-5">Modifier les validateurs pour {{ $user->name }}</h2>
@@ -12,7 +15,7 @@
         <ul>
             @foreach($assignedValidators as $validator)
                 <li>
-                    {{ $validator->name }}
+                    {{ $validator->name }} {{ $validator->prenom }}
                     <form action="{{ route('remove.validator', ['userId' => $user->id, 'validatorId' => $validator->id]) }}" method="POST" style="display:inline;">
                         @csrf
                         @method('DELETE')
@@ -33,7 +36,7 @@
             <select name="validators[]" id="validators" class="form-control" multiple>
                 @foreach($validators as $validator)
                     <option value="{{ $validator->id }}">
-                        {{ $validator->name }}
+                        {{ $validator->name }} {{ $validator->prenom }}
                     </option>
                 @endforeach
             </select>

@@ -2,16 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Brian2694\Toastr\Facades\Toastr;
+
+use App\Models\Role;
 use Hash;
 use DB;
 use Carbon\Carbon;
-use App\Models\Validator; // Make sure this model is correctly defined
+use App\Models\Validator;
+
 class UserController extends Controller
- { 
+{
     public function index(Request $request)
     {
         $query = User::query();
@@ -32,23 +34,21 @@ class UserController extends Controller
         if ($request->has('admin') && !is_null($request->admin)) {
             $query->where('admin', $request->admin);
         }
-
+        if ($request->has('gestionnaire') && !is_null($request->gestionnaire)) {
+            $query->where('gestionnaire', $request->gestionnaire);
+        }
         // Additional filters can be added here
 
         $users = $query->with('validators')->get();
-
+        $users = User::paginate(3);
         return view('admin.manage', compact('users'));
     }
 
-    
-
-    
     public function create()
     {
         $role = DB::table('role_type_users')->get(); // Ensure this table and data exist
         return view('admin.create', compact('role'));
     }
-
 
     public function store(Request $request)
     {
@@ -62,8 +62,11 @@ class UserController extends Controller
             'department' => 'sometimes|string|max:255',
             'password' => 'required|string|min:8|confirmed',
             'admin' => 'required|in:yes,no',
+            
+            'gestionnaire' => 'required|boolean',
+       
         ]);
-    
+
         $user = User::create([
             'name' => $request->name,
             'prenom' => $request->prenom,
@@ -75,37 +78,65 @@ class UserController extends Controller
             'password' => Hash::make($request->password),
             'join_date' => $request->join_date ?? now(),
             'admin' => $request->admin === 'yes',
+            'gestionnaire' => $request->gestionnaire,
         ]);
-    
+
         // Automatically add to validators table if role is 'validator'
         if ($request->role_name == 'Validateur') {
             Validator::updateOrCreate(['email' => $user->email], ['name' => $user->name, 'email' => $user->email]);
         }
-    
+
         Toastr::success('User created successfully!', 'Success');
         return response()->json(['success' => true, 'message' => 'User created successfully!']);
     }
-    
-    public function updateUser(Request $request, $id)
+
+    public function update(Request $request, $id)
+    {
+            $request->validate([
+                'name' => 'required|string|max:255',
+                'prenom' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email,'.$id,
+                'role_name' => 'required|string',
+                'position' => 'required|string|max:255',
+                'department' => 'nullable|string|max:255',
+                'admin' => 'required|boolean',
+                'gestionnaire' => 'required|boolean',
+                'status' => 'required|in:active,inactive',
+            ]);
+        
+            $user = User::findOrFail($id);
+        
+            $user->name = $request->name;
+            $user->prenom = $request->prenom;
+            $user->email = $request->email;
+            $user->role_name = $request->role_name;
+            $user->position = $request->position;
+            $user->department = $request->department;
+            $user->admin = $request->admin;
+            $user->gestionnaire = $request->gestionnaire;
+            $user->status = $request->status;
+        
+            $user->save();
+        
+            Toastr::success('Utilisateur mis à jour avec succès!', 'Succès');
+            return redirect()->route('estimates.index');
+        }
+    public function edit($id)
     {
         $user = User::findOrFail($id);
-        // Assume similar validation as store method
-        $user->update($request->all());
-    
-        if ($user->role_name == 'Validateur') {
-            Validator::updateOrCreate(['email' => $user->email], ['name' => $user->name, 'email' => $user->email]);
-        } else {
-            // Optionally remove from validators table if not a validator anymore
-            Validator::where('email', $user->email)->delete();
-        }
-    
-        Toastr::success('User updated successfully!', 'Success');
-        return response()->json(['success' => true, 'message' => 'User updated successfully!']);
+        $roles = DB::table('role_type_users')->get(); // Assurez-vous d'utiliser la bonne variable ici
+        return view('admin.edit', compact('user', 'roles'));
     }
     
 
-  
+    public function destroy($id)
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
 
+        Toastr::success('User deleted successfully!', 'Success');
+        return redirect()->route('users.index')->with('success', 'Utilisateur supprimé avec succès.');
+    }
 
     public function modifyValidators($id)
     {
@@ -136,16 +167,4 @@ class UserController extends Controller
 
         return redirect()->route('modify.validators', $user->id)->with('success', 'Validator removed successfully');
     }
-
-
-
-
-
-
-
-
-
-
-
-
 }

@@ -48,6 +48,7 @@ class ImportExistingValidators extends Command
                     'status' => $user->status,
                     'role_name' => $user->role_name,
                     'admin' => $user->admin,
+                    'gestionnaire' => $user->gestionnaire,
                     'avatar' => $user->avatar,
                     'position' => $user->position,
                     'department' => $user->department,

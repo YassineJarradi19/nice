@@ -6,60 +6,58 @@
                 <li class="menu-title">
                     <span>Main</span>
                 </li>
-                <li class="{{ set_active(['home','em/dashboard']) }} submenu">
-                    <a href="#" class="{{ set_active(['home','em/dashboard']) ? 'noti-dot' : '' }}">
+                <li class="{{ request()->is('home') ? 'active' : '' }}">
+                    <a href="{{ route('home') }}">
                         <i class="la la-dashboard"></i>
-                        <span> Dashboard</span> <span class="menu-arrow"></span>
+                        <span> ACCUEIL</span>
                     </a>
-                    <ul style="{{ request()->is('/*') ? 'display: block;' : 'display: none;' }}">
-                        <li><a class="{{ set_active(['home']) }}" href="{{ route('home') }}">Admin Dashboard</a></li>
-                    </ul>
-                </li>
-                
-                <li class="{{ set_active(['create/estimate/page','form/estimates/page']) }} submenu">
-                    <a href="#" class="{{ set_active(['create/estimate/page','form/estimates/page']) ? 'noti-dot' : '' }}">
-                        <i class="la la-files-o"></i>
-                        <span> Demandes </span> 
-                        <span class="menu-arrow"></span>
-                    </a>
-                    <ul style="{{ request()->is('/*') ? 'display: block;' : 'display: none;' }}">
-                        <li><a class="{{ set_active(['create/estimate/page','form/estimates/page']) }}" href="{{ route('form/estimates/page') }}">Listes demande</a></li>
-                    </ul>
                 </li>
 
-                @if(auth()->user()->role_name == 'Validateur') <!-- Check if user role_name is validator -->
-                <li class="{{ request()->is('validator/*') ? 'active submenu' : 'submenu' }}">
-                    <a href="javascript:void(0);">
-                        <i class="la la-check-circle"></i>
-                        <span> Validator Interface </span>
-                        <span class="menu-arrow"></span>
+            
+                <li class="{{ request()->is('form/estimates/page') ? 'active' : '' }}">
+                    <a href="{{ route('form/estimates/page') }}">
+                        <i class="la la-files-o"></i>
+                        <span> Liste Des Demandes </span>
                     </a>
-                    <ul style="{{ request()->is('validator/*') ? 'display: block;' : 'display: none;' }}">
-                        
-                        <li>
-                            <a class="{{ request()->routeIs('validator.requests') ? 'active' : '' }}" href="{{ route('validator.requests') }}">
-                                Liste de demande à valider
-                            </a>
-                        </li>
-                    </ul>
+                </li>
+                @if(auth()->user()->gestionnaire=== 1)
+                <li class="{{ request()->is('articles/index') ? 'active' : '' }}">
+                    <a href="{{ route('articles.index') }}">
+                        <i class="la la-warehouse"></i>
+                        <span> Gestion de Stock </span>
+                    </a>
+                </li>
+                @endif
+                @if(auth()->user()->role_name === 'Acheteur')
+                <li class="{{ request()->is('demanderecu') ? 'active' : '' }}">
+                    <a href="{{ route('demanderecu') }}">
+                        <i class="la la-files-o"></i>
+                        <span> Les Demandes Reçues</span>
+                    </a>
+                </li>
+                <li class="{{ request()->is('articles/index') ? 'active' : '' }}">
+                    <a href="{{ route('articles.index') }}">
+                        <i class="la la-warehouse"></i>
+                        <span> Gestion de Stock </span>
+                    </a>
+                </li>
+                @endif
+
+                @if(auth()->user()->role_name == 'Validateur') <!-- Check if user role_name is validator -->
+                <li class="{{ request()->is('validator/requests') ? 'active' : '' }}">
+                    <a href="{{ route('validator.requests') }}">
+                        <i class="la la-check-circle"></i>
+                        <span>Interface Des Validateurs</span>
+                    </a>
                 </li>
                 @endif
 
                 @if(auth()->user()->admin == 1) <!-- Check if user is admin by admin attribute -->
-                <li class="{{ request()->is('user/*') ? 'active submenu' : 'submenu' }}">
-                    <a href="javascript:void(0);">
+                <li class="{{ request()->is('users/index') ? 'active' : '' }}">
+                    <a href="{{ route('users.index') }}">
                         <i class="la la-user"></i>
-                        <span> User Management </span>
-                        <span class="menu-arrow"></span>
+                        <span>Liste Des Utilisateurs </span>
                     </a>
-                    <ul style="{{ request()->is('user/*') ? 'display: block;' : 'display: none;' }}">
-                        <li>
-                            <a class="{{ request()->routeIs('users.index') ? 'active' : '' }}" href="{{ route('users.index') }}">
-                                Listes des utilisateurs
-                            </a>
-                        </li>
-                        
-                    </ul>
                 </li>
                 @endif
                 

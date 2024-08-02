@@ -17,8 +17,9 @@ class RegisterController extends Controller
     public function register()
     {
         $role = DB::table('role_type_users')->get();
-        return view('auth.register',compact('role'));
+        return view('auth.register', compact('role'));
     }
+
     public function storeUser(Request $request)
     {
         $request->validate([
@@ -26,12 +27,10 @@ class RegisterController extends Controller
             'email'     => 'required|string|email|max:255|unique:users',
             'role_name' => 'required|string|max:255',
             'password'  => 'required|string|min:8|confirmed',
-            'password_confirmation' => 'required',
         ]);
 
-        $dt       = Carbon::now();
-        $todayDate = $dt->toDayDateTimeString();
-        
+        $todayDate = Carbon::now()->format('Y-m-d'); // Format date correctly for MySQL
+
         User::create([
             'name'      => $request->name,
             'email'     => $request->email,

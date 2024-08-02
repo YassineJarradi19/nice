@@ -17,13 +17,13 @@ class CreateUsersTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('prenom')->nullable(); // Add 'prenom' column; adjust nullable as needed
-            $table->string('user_id');
+            $table->string('user_id')->unique(); // Ensure user_id is unique if it is supposed to be unique
             $table->string('email')->unique();
-            $table->string('join_date')->unique();
+            $table->date('join_date'); // Use 'date' type for join_date
             $table->string('phone_number')->nullable();
             $table->string('status')->nullable();
             $table->string('role_name')->nullable();
-            $table->string('admin')->nullable();
+            $table->boolean('admin')->default(false); // Use boolean for admin flag
             $table->string('avatar')->nullable();
             $table->string('position')->nullable();
             $table->string('department')->nullable();
@@ -33,7 +33,6 @@ class CreateUsersTable extends Migration
             $table->timestamps();
         });
     }
-    
 
     /**
      * Reverse the migrations.

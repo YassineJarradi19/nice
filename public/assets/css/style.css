@@ -6247,7 +6247,7 @@ table.table-inbox tbody tr.checked {
 
 .error-page {
     align-items: center;
-    background-color: rgba(244, 59, 72, 0.2);
+    background-color: #e5e7eb;
     color: #1f1f1f;
     display: flex;
 }
@@ -8912,4 +8912,47 @@ ul.comment-list li ul.children {
 }
 .bg-custom-blue {
     background-color: var(--blue);
+}
+
+
+
+.status-validée {
+    color: green;
+    font-weight: bold;
+    font-size: 1.1em; /* Increase font size */
+    font-family: 'Arial', sans-serif;
+    padding: 5px; /* Add padding */
+    border-radius: 3px; /* Rounded corners */
+    background-color: #e6ffe6; /* Light green background */
+}
+
+.status-refusée {
+    color: red;
+    font-weight: bold;
+    font-size: 1.1em; /* Increase font size */
+    font-family: 'Arial', sans-serif;
+    padding: 5px; /* Add padding */
+    border-radius: 3px; /* Rounded corners */
+    background-color: #ffe6e6; /* Light red background */
+}
+
+.status-en-cours {
+    color: orange;
+    font-weight: bold;
+    font-size: 1.1em; /* Increase font size */
+    font-family: 'Arial', sans-serif;
+    padding: 5px; /* Add padding */
+    border-radius: 3px; /* Rounded corners */
+    background-color: #fff4e6; /* Light orange background */
+}
+
+
+.table-warning {
+    background-color: #fff3cd;
+}
+.badge-success {
+    background-color: #28a745;
+}
+.badge-secondary {
+    background-color: #6c757d;
 }

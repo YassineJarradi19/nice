@@ -1,4 +1,8 @@
 @extends('layouts.master')
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title> Edit</title>
 @section('content')
     <!-- Page Wrapper -->
     <div class="page-wrapper">

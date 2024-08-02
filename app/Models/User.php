@@ -9,6 +9,8 @@ use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 use App\Models\Validator;
 use Illuminate\Database\Eloquent\Model;
+use DB;
+
 
 use App\Events\UserCreated;
 
@@ -62,13 +64,24 @@ class User extends Authenticatable
     {
         return $this->hasMany(Estimates::class);
     }
+    public function validators()
+    {
+        return $this->belongsToMany(Validator::class, 'user_validator_assignments', 'user_id', 'validator_id');
+    }
 
-protected static function boot()
+    public function assignedUsers()
+    {
+        return $this->belongsToMany(User::class, 'user_validator_assignments', 'validator_id', 'user_id');
+    }
+
+    protected static function boot()
     {
         parent::boot();
 
         static::created(function ($user) {
             event(new UserCreated($user));
         });
-    }
+    }   
+
+    
 }

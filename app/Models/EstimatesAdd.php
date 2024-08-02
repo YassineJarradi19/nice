@@ -13,6 +13,7 @@ class EstimatesAdd extends Model
         'estimate_number',
         'description',
         'qty',
+        'status',
         'motif'
     ];
     public function estimate()

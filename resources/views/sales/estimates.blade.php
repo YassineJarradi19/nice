@@ -1,10 +1,14 @@
 @extends('layouts.master')
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+    <title> Les Demandes</title>
 @section('content')
     {{-- message --}}
     {!! Toastr::message() !!}
     <!-- Page Wrapper -->
     <div class="page-wrapper">
-
+    
         <!-- Page Content -->
         <div class="content container-fluid">
         
@@ -12,7 +16,8 @@
             <div class="page-header">
                 <div class="row align-items-center">
                     <div class="col">
-                        <h3 class="page-title">Demandes d'achat</h3>
+                    
+                        <h3 class="page-title">La liste des demandes</h3>
                     </div>
                     <div class="col-auto float-right ml-auto">
                         <a href="{{ route('create/estimate/page') }}" class="btn add-btn"><i class="fa fa-plus"></i> Nouvelle demande</a>
@@ -21,11 +26,10 @@
             </div>
             <!-- /Page Header -->
             
-           <!-- Filter Panel -->
-           <div class="row pb-3">
-           <a href="#" class="btn add-btn-filter" data-toggle="collapse" data-target="#filter-panel"><i class="fa fa-filter"></i> Filter</a>
-
-           </div>
+            <!-- Filter Panel -->
+            <div class="row pb-3">
+                <a href="#" class="btn add-btn-filter" data-toggle="collapse" data-target="#filter-panel"><i class="fa fa-filter"></i> Filter</a>
+            </div>
 
             <div id="filter-panel" class=" filter-panel">
                 <div class="panel panel-default">
@@ -36,52 +40,53 @@
                                     <div class="form-group">
                                         <label>Type de demande</label>
                                         <select class="form-control" name="type_demande">
-                                            <option value="">toute les demandes</option>
-                                            <option value="fourniture">Fourniture</option>
-                                            <option value="achat">Achat</option>
+                                            <option value="">Toutes les demandes</option>
+                                            <option value="fourniture" {{ request('type_demande') == 'fourniture' ? 'selected' : '' }}>Fourniture</option>
+                                            <option value="achat" {{ request('type_demande') == 'achat' ? 'selected' : '' }}>Achat</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-12">
                                     <div class="form-group">
-                                        <label>Date From</label>
-                                        <input type="date" class="form-control" name="date_from">
+                                        <label>Date de</label>
+                                        <input type="date" class="form-control" name="date_from" value="{{ request('date_from') }}">
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-12">
                                     <div class="form-group">
-                                        <label>Date To</label>
-                                        <input type="date" class="form-control" name="date_to">
+                                        <label>Date à</label>
+                                        <input type="date" class="form-control" name="date_to" value="{{ request('date_to') }}">
                                     </div>
                                 </div>
                                 <div class="col-md-3 col-12">
                                     <div class="form-group">
                                         <label>Status</label>
                                         <select class="form-control" name="status">
-                                            <option value="">toute les demandes</option>
-                                            <option value="Validée">Validée</option>
-                                            <option value="Refusée">Refusée</option>
-                                            <option value="En cours de validation">En cours de validation</option>
+                                                <option value="">Tous les statuts</option>
+                                                <option value="Validée" {{ request('status') == 'Validée' ? 'selected' : '' }}>Validée</option>
+                                                <option value="Livré" {{ request('status') == 'Livré' ? 'selected' : '' }}>Livré</option>
+                                                <option value="Refusée" {{ request('status') == 'Refusée' ? 'selected' : '' }}>Refusée</option>
+                                                <option value="En cours de traitement" {{ request('status') == 'En cours de traitement' ? 'selected' : '' }}>En cours de traitement</option>
+                                                <option value="Commandé" {{ request('status') == 'Commandé' ? 'selected' : '' }}>Commandé</option>
+                                                <option value="Reçu" {{ request('status') == 'Reçu' ? 'selected' : '' }}>Reçu</option>
                                         </select>
                                     </div>
                                 </div>
                             </div>
-                            <button type="submit" class=" btn btn-secondary ">Apply Filter</button>
+                            <button type="submit" class="btn btn-secondary">Filtrer</button>
                         </form>
                     </div>
                 </div>
             </div>
 
-
-            
-            <div class="row ">
+            <div class="row">
                 <div class="col-md-12">
                     <div class="table-responsive">
                         <table class="table table-striped custom-table mb-0">
                             <thead>
                                 <tr>
                                     <th>Numero de demande</th>
-                                    <th>Type de demande</th>  <!-- Updated Column Header -->
+                                    <th>Type de demande</th>
                                     <th>Date de création</th>
                                     <th>Date du besoin</th>
                                     <th>Status</th>
@@ -90,28 +95,41 @@
                             </thead>
                             <tbody>
                                 @foreach ($estimates as $item)
-                                <tr>
-                                    <td hidden class="ids">{{ $item->id }}</td>
-                                    <td hidden class="estimate_number">{{ $item->estimate_number }}</td>
-                                    <td><a href="{{ url('estimate/view/'.$item->estimate_number) }}">{{ $item->estimate_number }}</a></td>
-                                    <td>{{ $item->type_demande }}</td>  <!-- Display Type de Demande -->
-                                    <td>{{date('d F, Y', strtotime($item->estimate_date)) }}</td>
-                                    <td>{{date('d F, Y', strtotime($item->expiry_date)) }}</td>
-                                    <td><span class="badge bg-inverse-success">Acceptée</span></td>
-                                    <td class="text-right">
-                                        <div class="dropdown dropdown-action">
-                                            <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
-                                            <div class="dropdown-menu dropdown-menu-right">
-                                                <a class="dropdown-item" href="{{ url('edit/estimate/'.$item->estimate_number) }}"><i class="fa fa-pencil m-r-5"></i> Edit</a>
-                                                <a class="dropdown-item delete_estimate" href="#" data-toggle="modal" data-target="#delete_estimate"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
-                                            </div>
-                                        </div>
-                                    </td>
-                                </tr>
+                                    <tr>
+                                        <td hidden class="ids">{{ $item->id }}</td>
+                                        <td hidden class="estimate_number">{{ $item->estimate_number }}</td>
+                                        <td><a href="{{ url('estimate/view/'.$item->estimate_number) }}">{{ $item->estimate_number }}</a></td>
+                                        <td>{{ $item->type_demande }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($item->estimate_date)->translatedFormat('d F, Y') }}</td>
+                                         <td>{{ \Carbon\Carbon::parse($item->expiry_date)->translatedFormat('d F, Y') }}</td>
+ <td>
+                                            <span class="badge 
+                                                @if($item->status == 'Validée') status-validée
+                                                @elseif($item->status == 'Validation partielle') status-validée
+                                                @elseif($item->status == 'Refusée') status-refusée
+                                                @elseif($item->status == 'En cours') status-en-cours
+                                                @elseif($item->status == 'livrer') status-validée
+                                                @else text
+                                                @endif">
+                                                {{ $item->status }}
+                                            </span>
+                                        </td>
+                                        <td class="text-right">
+                                            @if($item->status == 'En cours')
+                                                <div class="dropdown dropdown-action">
+                                                    <a href="#" class="action-icon dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><i class="material-icons">more_vert</i></a>
+                                                    <div class="dropdown-menu dropdown-menu-right">
+                                                        <a class="dropdown-item delete_estimate" href="#" data-toggle="modal" data-target="#delete_estimate"><i class="fa fa-trash-o m-r-5"></i> Delete</a>
+                                                    </div>
+                                                </div>
+                                            @endif
+                                        </td>
+                                    </tr>
                                 @endforeach
                             </tbody>
                         </table>
                     </div>
+                    {{ $estimates->links() }}
                 </div>
             </div>
         </div>
@@ -124,7 +142,7 @@
                     <div class="modal-body">
                         <div class="form-header">
                             <h3>Supprimer la demande d'achat</h3>
-                            <p>Voulez vous vraiment Supprimer la demande d'achat?</p>
+                            <p>Voulez-vous vraiment supprimer la demande d'achat?</p>
                         </div>
                         <form action="{{ route('estimate/delete') }}" method="POST">
                             @csrf
